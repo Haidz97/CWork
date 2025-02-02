@@ -39,6 +39,12 @@
         </VBox>
         <VBox alignment="TOP_CENTER" spacing="10">
           <children>
+            <Label text="Адрес производителя:"/>
+            <TextField fx:id="manufacturerAddressField" prefWidth="200.0"/> <!-- Новое поле для ввода адреса производителя -->
+          </children>
+        </VBox>
+        <VBox alignment="TOP_CENTER" spacing="10">
+          <children>
             <Label text="Дата поступления:"/>
             <DatePicker fx:id="arrivalDatePicker"/>
           </children>
@@ -52,7 +58,6 @@
         <VBox alignment="BOTTOM_RIGHT" spacing="10">
           <children>
             <Button mnemonicParsing="false" onAction="#addProduct" text="Добавить товар"/>
-
           </children>
         </VBox>
         <!-- Добавляем кнопку для выбора товара и поле для количества -->
@@ -77,6 +82,7 @@
       <columns>
         <TableColumn fx:id="nameColumn" prefWidth="125.0" text="Название"/>
         <TableColumn fx:id="manufacturerColumn" prefWidth="125.0" text="Производитель"/>
+        <TableColumn fx:id="addressColumn" prefWidth="175.0" text="Адрес производителя"/> <!-- Новый столбец для отображения адреса производителя -->
         <TableColumn fx:id="dateColumn" prefWidth="115.0" text="Дата поступления"/>
         <TableColumn fx:id="quantityColumn" prefWidth="75.0" text="Количество"/>
       </columns>

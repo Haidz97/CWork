@@ -8,12 +8,14 @@ import javafx.beans.property.StringProperty;
 public class Product {
     private final StringProperty name;
     private final StringProperty manufacturer;
+    private final StringProperty manufacturerAddress;
     private final IntegerProperty quantity;
     private final StringProperty date;
 
-    public Product(String name, String manufacturer, int quantity, String date) {
+    public Product(String name, String manufacturer, String manufacturerAddress, int quantity, String date) {
         this.name = new SimpleStringProperty(name);
         this.manufacturer = new SimpleStringProperty(manufacturer);
+        this.manufacturerAddress = new SimpleStringProperty(manufacturerAddress);
         this.quantity = new SimpleIntegerProperty(quantity);
         this.date = new SimpleStringProperty(date);
     }
@@ -30,9 +32,6 @@ public class Product {
         this.name.set(name);
     }
 
-    public String getManufacturer() {
-        return manufacturer.get();
-    }
 
     public StringProperty manufacturerProperty() {
         return manufacturer;
@@ -40,6 +39,18 @@ public class Product {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer.set(manufacturer);
+    }
+
+    public String getManufacturerAddress() {
+        return manufacturerAddress.get();
+    }
+
+    public StringProperty manufacturerAddressProperty() {
+        return manufacturerAddress;
+    }
+
+    public void setManufacturerAddress(String manufacturerAddress) {
+        this.manufacturerAddress.set(manufacturerAddress);
     }
 
     public int getQuantity() {
@@ -54,15 +65,10 @@ public class Product {
         this.quantity.set(quantity);
     }
 
-    public String getDate() {
-        return date.get();
-    }
+
 
     public StringProperty dateProperty() {
         return date;
     }
-
-    public void setDate(String date) {
-        this.date.set(date);
-    }
+    
 }

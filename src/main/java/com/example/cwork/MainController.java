@@ -15,6 +15,9 @@ import java.time.format.DateTimeFormatter;
 //Контроллер главного окна приложения, управляющий взаимодействием между пользователем и данными.
 public class MainController {
 
+    //ввод адреса производителя
+    @FXML
+    private TextField manufacturerAddressField;
     @FXML
     //Таблица для отображения списка товаров.
     private TableView<Product> productTable;
@@ -30,6 +33,9 @@ public class MainController {
     @FXML
     //Столбец таблицы, содержащий количество товаров.
     private TableColumn<Product, Number> quantityColumn;
+    @FXML
+    //Столбец таблицы, содержащий адрес производителя.
+    private TableColumn<Product, String> addressColumn;
 
     @FXML
     //Поле для ввода названия нового товара.
@@ -68,6 +74,8 @@ public class MainController {
         manufacturerColumn.setCellValueFactory(cellData -> cellData.getValue().manufacturerProperty());
         dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
         quantityColumn.setCellValueFactory(cellData -> cellData.getValue().quantityProperty());
+        addressColumn.setCellValueFactory(cellData -> cellData.getValue().manufacturerAddressProperty());
+
 
         productTable.setItems(products);    // Связывание таблицы с списком товаров
 
@@ -75,6 +83,7 @@ public class MainController {
         manufacturers.addAll("KDV", "Красный октябрь", "Славянка", "Ротфронт", "Черноголовка");
         manufacturerComboBox.setItems(manufacturers);
         manufacturerComboBox.setItems(FXCollections.observableArrayList(manufacturers));
+        
 
         // Добавление слушателя изменений в списке товаров для обновления списка товаров для продажи
         products.addListener((ListChangeListener.Change<? extends Product> c) -> {
@@ -107,6 +116,7 @@ public class MainController {
     private void addProduct(ActionEvent event) {
         String productName = productNameField.getText();
         String selectedManufacturer = manufacturerComboBox.getSelectionModel().getSelectedItem();
+        String manufacturerAddress = manufacturerAddressField.getText(); // Убедитесь, что мы получаем правильное значение
         LocalDate arrivalDate = arrivalDatePicker.getValue();
         String quantityStr = quantityField.getText();
 
@@ -114,11 +124,17 @@ public class MainController {
             int quantity = Integer.parseInt(quantityStr);
 
             String formattedDate = arrivalDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            Product newProduct = new Product(productName, selectedManufacturer, quantity, formattedDate);
+            Product newProduct = new Product(
+                    productName,
+                    selectedManufacturer,
+                    manufacturerAddress, // Передаем адрес производителя
+                    quantity,
+                    formattedDate
+            );
             products.add(newProduct);
             productTable.refresh();
             clearFields();
-        } else {               //Ошибка, если не все поля заполнены при поступлении
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Заполните все поля!");
             alert.showAndWait();
