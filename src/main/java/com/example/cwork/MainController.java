@@ -15,8 +15,6 @@ public class MainController {
 
     // Поля для ввода данных
     @FXML
-    private TextField manufacturerAddressField;
-    @FXML
     private TableView<Product> productTable;
     @FXML
     private TableColumn<Product, String> nameColumn;
@@ -54,20 +52,20 @@ public class MainController {
     private void initialize() {
         // Настройка столбцов таблицы
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        manufacturerColumn.setCellValueFactory(cellData -> cellData.getValue().manufacturerProperty());
+        manufacturerColumn.setCellValueFactory(cellData -> cellData.getValue().manufacturerProperty()); // Название производителя
+        addressColumn.setCellValueFactory(cellData -> cellData.getValue().manufacturerAddressProperty()); // Адрес производителя
         dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
         quantityColumn.setCellValueFactory(cellData -> cellData.getValue().quantityProperty());
-        addressColumn.setCellValueFactory(cellData -> cellData.getValue().manufacturerAddressProperty());
 
         productTable.setItems(products); // Связывание таблицы с списком товаров
 
         // Инициализация списка производителей
         manufacturers.addAll(
-                new Manufacturer("KDV", "Адрес KDV"),
-                new Manufacturer("Красный октябрь", "Адрес Красный октябрь"),
-                new Manufacturer("Славянка", "Адрес Славянка"),
-                new Manufacturer("Ротфронт", "Адрес Ротфронт"),
-                new Manufacturer("Черноголовка", "Адрес Черноголовка")
+                new Manufacturer("KDV", "Ул. Пушкина 10"),
+                new Manufacturer("Красный октябрь", "Ул. Карла маркса 1"),
+                new Manufacturer("Славянка", "Ул. Ленина 66"),
+                new Manufacturer("Ротфронт", "Ул Молодёжная 15"),
+                new Manufacturer("Черноголовка", "Ул. Бущенко 9")
         );
 
         // Заполнение ComboBox именами производителей
@@ -80,12 +78,22 @@ public class MainController {
             updateSaleProductOptions();
         });
 
+
         // Ограничиваем ввод только числовыми значениями в поле количества
         quantityField.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                Integer.parseInt(newValue);
-            } catch (NumberFormatException e) {
+            if (!newValue.matches("\\d*")) { // Разрешаем только цифры
                 quantityField.setText(oldValue);
+            } else if (!newValue.isEmpty() && Integer.parseInt(newValue) <= 0) { // Проверка на отрицательные значения
+                quantityField.setText(oldValue);
+            }
+        });
+
+        // Аналогично для поля продажи
+        saleQuantityField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) { // Разрешаем только цифры
+                saleQuantityField.setText(oldValue);
+            } else if (!newValue.isEmpty() && Integer.parseInt(newValue) <= 0) { // Проверка на отрицательные значения
+                saleQuantityField.setText(oldValue);
             }
         });
     }
@@ -111,6 +119,14 @@ public class MainController {
 
         if (!productName.isEmpty() && selectedManufacturerName != null && arrivalDate != null && !quantityStr.isEmpty()) {
             int quantity = Integer.parseInt(quantityStr);
+
+            // Проверка на отрицательные значения
+            if (quantity <= 0) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Количество товара должно быть положительным числом!");
+                alert.showAndWait();
+                return; // Прерываем выполнение метода
+            }
 
             // Находим объект Manufacturer по имени
             Manufacturer selectedManufacturer = manufacturers.stream()
@@ -144,9 +160,19 @@ public class MainController {
     @FXML
     private void sellProduct(ActionEvent event) {
         String selectedProduct = saleProductComboBox.getSelectionModel().getSelectedItem();
-        int quantityToSell = Integer.parseInt(saleQuantityField.getText());
+        String quantityStr = saleQuantityField.getText();
 
-        if (selectedProduct != null && quantityToSell > 0) {
+        if (selectedProduct != null && !quantityStr.isEmpty()) {
+            int quantityToSell = Integer.parseInt(quantityStr);
+
+            // Проверка на отрицательные значения
+            if (quantityToSell <= 0) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Количество товара для продажи должно быть положительным числом!");
+                alert.showAndWait();
+                return; // Прерываем выполнение метода
+            }
+
             Product productToSell = findProductByName(selectedProduct);
             if (productToSell != null && productToSell.getQuantity() >= quantityToSell) {
                 productToSell.setQuantity(productToSell.getQuantity() - quantityToSell);

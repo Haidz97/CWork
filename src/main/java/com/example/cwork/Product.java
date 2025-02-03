@@ -36,16 +36,18 @@ public class Product {
         return manufacturer;
     }
 
+    // Название производителя
     public String getManufacturerName() {
         return manufacturer.getName();
     }
 
-    public String getManufacturerAddress() {
-        return manufacturer.getAddress();
-    }
-
     public StringProperty manufacturerProperty() {
         return new SimpleStringProperty(manufacturer.getName());
+    }
+
+    // Адрес производителя
+    public String getManufacturerAddress() {
+        return manufacturer.getAddress();
     }
 
     public StringProperty manufacturerAddressProperty() {
