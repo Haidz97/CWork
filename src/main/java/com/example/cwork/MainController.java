@@ -1,6 +1,5 @@
 package com.example.cwork;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -10,63 +9,47 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
-
-//Контроллер главного окна приложения, управляющий взаимодействием между пользователем и данными.
 public class MainController {
 
-    //ввод адреса производителя
+    // Поля для ввода данных
     @FXML
     private TextField manufacturerAddressField;
     @FXML
-    //Таблица для отображения списка товаров.
     private TableView<Product> productTable;
     @FXML
-    //Столбец таблицы, содержащий названия товаров.
     private TableColumn<Product, String> nameColumn;
     @FXML
-    //Столбец таблицы, содержащий производителей товаров.
     private TableColumn<Product, String> manufacturerColumn;
     @FXML
-    //Столбец таблицы, содержащий даты поступления товаров.
     private TableColumn<Product, String> dateColumn;
     @FXML
-    //Столбец таблицы, содержащий количество товаров.
     private TableColumn<Product, Number> quantityColumn;
     @FXML
-    //Столбец таблицы, содержащий адрес производителя.
     private TableColumn<Product, String> addressColumn;
 
     @FXML
-    //Поле для ввода названия нового товара.
     private TextField productNameField;
     @FXML
-    //Комбо-бокс для выбора производителя товара.
     private ComboBox<String> manufacturerComboBox;
     @FXML
-    //Календарь для выбора даты поступления товара.
     private DatePicker arrivalDatePicker;
     @FXML
-    //Поле для ввода количества товара.
     private TextField quantityField;
 
     @FXML
-    //Комбо-бокс для выбора товара для продажи.
     private ComboBox<String> saleProductComboBox;
     @FXML
-    //Поле для ввода количества товара для продажи.
     private TextField saleQuantityField;
 
-    //Список всех товаров в магазине.
+    // Списки данных
     private ObservableList<Product> products = FXCollections.observableArrayList();
-    //Список товаров, доступных для продажи.
     private ObservableList<String> saleProducts = FXCollections.observableArrayList();
-    //Список возможных производителей товаров.
-    private ObservableList<String> manufacturers = FXCollections.observableArrayList();
-    //Список расходов (продаж) товаров.
+    private ObservableList<Manufacturer> manufacturers = FXCollections.observableArrayList();
     private ObservableList<Expense> expenses = FXCollections.observableArrayList();
 
-    //Метод, вызываемый автоматически после загрузки FXML файла. Настраивает таблицу и заполняет комбо-боксы.
+    // Инициализация контроллера
     @FXML
     private void initialize() {
         // Настройка столбцов таблицы
@@ -76,14 +59,21 @@ public class MainController {
         quantityColumn.setCellValueFactory(cellData -> cellData.getValue().quantityProperty());
         addressColumn.setCellValueFactory(cellData -> cellData.getValue().manufacturerAddressProperty());
 
-
-        productTable.setItems(products);    // Связывание таблицы с списком товаров
+        productTable.setItems(products); // Связывание таблицы с списком товаров
 
         // Инициализация списка производителей
-        manufacturers.addAll("KDV", "Красный октябрь", "Славянка", "Ротфронт", "Черноголовка");
-        manufacturerComboBox.setItems(manufacturers);
-        manufacturerComboBox.setItems(FXCollections.observableArrayList(manufacturers));
-        
+        manufacturers.addAll(
+                new Manufacturer("KDV", "Адрес KDV"),
+                new Manufacturer("Красный октябрь", "Адрес Красный октябрь"),
+                new Manufacturer("Славянка", "Адрес Славянка"),
+                new Manufacturer("Ротфронт", "Адрес Ротфронт"),
+                new Manufacturer("Черноголовка", "Адрес Черноголовка")
+        );
+
+        // Заполнение ComboBox именами производителей
+        manufacturerComboBox.setItems(FXCollections.observableArrayList(
+                manufacturers.stream().map(Manufacturer::getName).collect(Collectors.toList())
+        ));
 
         // Добавление слушателя изменений в списке товаров для обновления списка товаров для продажи
         products.addListener((ListChangeListener.Change<? extends Product> c) -> {
@@ -100,7 +90,7 @@ public class MainController {
         });
     }
 
-    //Обновляет список товаров, доступных для продажи, основываясь на текущих остатках
+    // Обновляет список товаров, доступных для продажи
     private void updateSaleProductOptions() {
         saleProducts.clear();
         for (Product p : products) {
@@ -111,29 +101,38 @@ public class MainController {
         saleProductComboBox.setItems(saleProducts);
     }
 
-    //Обработчик события нажатия кнопки "Добавить товар". Проверяет заполненность полей и добавляет новый товар в список.
+    // Обработчик события нажатия кнопки "Добавить товар"
     @FXML
     private void addProduct(ActionEvent event) {
         String productName = productNameField.getText();
-        String selectedManufacturer = manufacturerComboBox.getSelectionModel().getSelectedItem();
-        String manufacturerAddress = manufacturerAddressField.getText(); // Убедитесь, что мы получаем правильное значение
+        String selectedManufacturerName = manufacturerComboBox.getSelectionModel().getSelectedItem();
         LocalDate arrivalDate = arrivalDatePicker.getValue();
         String quantityStr = quantityField.getText();
 
-        if (!productName.isEmpty() && selectedManufacturer != null && arrivalDate != null && !quantityStr.isEmpty()) {
+        if (!productName.isEmpty() && selectedManufacturerName != null && arrivalDate != null && !quantityStr.isEmpty()) {
             int quantity = Integer.parseInt(quantityStr);
 
-            String formattedDate = arrivalDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-            Product newProduct = new Product(
-                    productName,
-                    selectedManufacturer,
-                    manufacturerAddress, // Передаем адрес производителя
-                    quantity,
-                    formattedDate
-            );
-            products.add(newProduct);
-            productTable.refresh();
-            clearFields();
+            // Находим объект Manufacturer по имени
+            Manufacturer selectedManufacturer = manufacturers.stream()
+                    .filter(m -> m.getName().equals(selectedManufacturerName))
+                    .findFirst()
+                    .orElse(null);
+
+            if (selectedManufacturer != null) {
+                String formattedDate = arrivalDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                Product newProduct = new Product(
+                        productName,
+                        selectedManufacturer,
+                        quantity,
+                        formattedDate
+                );
+                products.add(newProduct);
+                clearFields();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Производитель не найден!");
+                alert.showAndWait();
+            }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Заполните все поля!");
@@ -141,7 +140,7 @@ public class MainController {
         }
     }
 
-    //Обработчик события нажатия кнопки "Продать товар". Проверяет выбранный товар и количество, затем уменьшает остаток товара.
+    // Обработчик события нажатия кнопки "Продать товар"
     @FXML
     private void sellProduct(ActionEvent event) {
         String selectedProduct = saleProductComboBox.getSelectionModel().getSelectedItem();
@@ -169,18 +168,18 @@ public class MainController {
         }
     }
 
-    //Находит товар по названию в списке товаров.
+    // Находит товар по названию в списке товаров
     private Product findProductByName(String name) {
         return products.stream().filter(p -> p.getName().equals(name)).findFirst().orElse(null);
     }
 
-    //Очищает поля для ввода данных о продаже товара.
+    // Очищает поля для ввода данных о продаже товара
     private void clearSaleFields() {
         saleProductComboBox.getSelectionModel().clearSelection();
         saleQuantityField.clear();
     }
 
-    //Очищает все поля ввода после добавления нового товара.
+    // Очищает все поля ввода после добавления нового товара
     private void clearFields() {
         productNameField.clear();
         manufacturerComboBox.getSelectionModel().clearSelection();

@@ -7,19 +7,19 @@ import javafx.beans.property.StringProperty;
 
 public class Product {
     private final StringProperty name;
-    private final StringProperty manufacturer;
-    private final StringProperty manufacturerAddress;
+    private final Manufacturer manufacturer; // Используем объект Manufacturer
     private final IntegerProperty quantity;
     private final StringProperty date;
 
-    public Product(String name, String manufacturer, String manufacturerAddress, int quantity, String date) {
+    // Конструктор, принимающий Manufacturer
+    public Product(String name, Manufacturer manufacturer, int quantity, String date) {
         this.name = new SimpleStringProperty(name);
-        this.manufacturer = new SimpleStringProperty(manufacturer);
-        this.manufacturerAddress = new SimpleStringProperty(manufacturerAddress);
+        this.manufacturer = manufacturer;
         this.quantity = new SimpleIntegerProperty(quantity);
         this.date = new SimpleStringProperty(date);
     }
 
+    // Геттеры и свойства
     public String getName() {
         return name.get();
     }
@@ -32,28 +32,24 @@ public class Product {
         this.name.set(name);
     }
 
-    public String getManufacturer() {
-        return manufacturer.get();
-    }
-
-    public StringProperty manufacturerProperty() {
+    public Manufacturer getManufacturer() {
         return manufacturer;
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer.set(manufacturer);
+    public String getManufacturerName() {
+        return manufacturer.getName();
     }
 
     public String getManufacturerAddress() {
-        return manufacturerAddress.get();
+        return manufacturer.getAddress();
+    }
+
+    public StringProperty manufacturerProperty() {
+        return new SimpleStringProperty(manufacturer.getName());
     }
 
     public StringProperty manufacturerAddressProperty() {
-        return manufacturerAddress;
-    }
-
-    public void setManufacturerAddress(String manufacturerAddress) {
-        this.manufacturerAddress.set(manufacturerAddress);
+        return new SimpleStringProperty(manufacturer.getAddress());
     }
 
     public int getQuantity() {
