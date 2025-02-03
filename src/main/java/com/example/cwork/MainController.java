@@ -118,6 +118,8 @@ public class MainController {
         LocalDate arrivalDate = arrivalDatePicker.getValue();
         String quantityStr = quantityField.getText();
 
+        
+
         if (!productName.isEmpty() && selectedManufacturerName != null && arrivalDate != null && !quantityStr.isEmpty()) {
             int quantity = Integer.parseInt(quantityStr);
 

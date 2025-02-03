@@ -16,19 +16,10 @@ public class Manufacturer {
         return name;
     }
 
-    // Сеттер для имени
-    public void setName(String name) {
-        this.name = name;
-    }
 
     // Геттер для адреса
     public String getAddress() {
         return address;
-    }
-
-    // Сеттер для адреса
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     // Переопределяем метод toString для удобного вывода информации
