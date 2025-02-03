@@ -151,22 +151,18 @@ public class MainController {
             Product productToSell = findProductByName(selectedProduct);
             if (productToSell != null && productToSell.getQuantity() >= quantityToSell) {
                 productToSell.setQuantity(productToSell.getQuantity() - quantityToSell);
-                if (productToSell.getQuantity() == 0) {
-                    products.remove(productToSell);
-                }
 
                 // Фиксация расхода
                 Expense expense = new Expense(productToSell, quantityToSell, LocalDateTime.now(), "Продажа товара");
                 expenses.add(expense);
 
-                productTable.refresh();
                 clearSaleFields();
-            } else {      //Выдаёт ошибку, если продать больше имеющегося товара
+            } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Недостаточно товара на складе.");
                 alert.showAndWait();
             }
-        } else {    //Ошибка, если не все поля заполнены при продаже
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Заполните все поля!");
             alert.showAndWait();

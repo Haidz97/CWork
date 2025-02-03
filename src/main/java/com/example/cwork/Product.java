@@ -32,6 +32,9 @@ public class Product {
         this.name.set(name);
     }
 
+    public String getManufacturer() {
+        return manufacturer.get();
+    }
 
     public StringProperty manufacturerProperty() {
         return manufacturer;
@@ -65,10 +68,11 @@ public class Product {
         this.quantity.set(quantity);
     }
 
-
+    public String getDate() {
+        return date.get();
+    }
 
     public StringProperty dateProperty() {
         return date;
     }
-    
 }
