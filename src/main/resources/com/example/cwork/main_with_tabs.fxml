@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cwork.MainController">
+  <tabs>
+    <!-- Первая вкладка для просмотра списка товаров -->
+    <Tab text="Список товаров">
+      <content>
+        <VBox>
+          <TableView fx:id="productTable">
+            <columns>
+              <TableColumn text="Название" fx:id="nameColumn"/>
+              <TableColumn text="Цена" fx:id="priceColumn"/>
+              <TableColumn text="Количество" fx:id="quantityColumn"/>
+              <TableColumn text="Дата поступления" fx:id="arrivalDateColumn"/>
+            </columns>
+          </TableView>
+          <HBox spacing="10">
+            <Button text="Поступление товара" onAction="#handleAddReceipt"/>
+            <Button text="Продажа товара" onAction="#handleAddSale"/>
+            <Button text="Удалить товар" onAction="#handleDeleteProduct"/>
+          </HBox>
+        </VBox>
+      </content>
+    </Tab>
+
+    <!-- Вторая вкладка для добавления/редактирования товара -->
+    <Tab text="Добавить/Редактировать товар">
+      <content>
+        <GridPane hgap="10" vgap="10">
+          <Label text="Название:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+          <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+          <Label text="Цена:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+          <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+          <Label text="Количество:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+          <TextField fx:id="quantityField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+          <Label text="Дата поступления:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+          <DatePicker fx:id="arrivalDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+          <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Button text="Сохранить" onAction="#handleSaveProduct"/>
+            <Button text="Отменить" onAction="#handleCancel"/>
+          </HBox>
+        </GridPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>

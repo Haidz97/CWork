@@ -1,26 +1,22 @@
 package com.example.cwork;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
-import java.time.LocalDateTime;
-
 public class Sale extends Document {
-    private final StringProperty productName;
-    private final StringProperty saleQuantity;
+    private Product product;
+    private int quantity;
 
-    public Sale(Product product, int quantity, LocalDateTime dateTime, String description) {
-        super(dateTime, description);
-        this.productName = new SimpleStringProperty(product.getName());
-        this.saleQuantity = new SimpleStringProperty(Integer.toString(quantity));
+    public Sale(String documentId, String date, Product product, int quantity) {
+        super(documentId, date);
+        this.product = product;
+        this.quantity = quantity;
     }
 
-    public String getProductName() {
-        return productName.get();
+    @Override
+    public void processDocument() {
+        if (product.getQuantity() >= quantity) {
+            product.setQuantity(product.getQuantity() - quantity);
+            System.out.println("Реализация товара: " + product.getName() + ", количество: " + quantity);
+        } else {
+            System.out.println("Недостаточно товара на складе!");
+        }
     }
-
-    public String getSaleQuantity() {
-        return saleQuantity.get();
-    }
-
 }
