@@ -19,15 +19,8 @@ public class Sale extends Document {
         return productName.get();
     }
 
-    public StringProperty productNameProperty() {
-        return productName;
-    }
-
     public String getSaleQuantity() {
         return saleQuantity.get();
     }
 
-    public StringProperty saleQuantityProperty() {
-        return saleQuantity;
-    }
 }

@@ -29,11 +29,7 @@ public class Arrival extends Document {
     public String getProductName() {
         return productName.get();
     }
-
-    //Название продукта.
-    public StringProperty productNameProperty() {
-        return productName;
-    }
+    
 
     //Название производителя
     public String getManufacturerName() {
@@ -44,13 +40,5 @@ public class Arrival extends Document {
     public StringProperty manufacturerNameProperty() {
         return manufacturerName;
     }
-
-    //свойство названия производителя
-    public String getArrivalQuantity() {
-        return arrivalQuantity.get();
-    }
-
-    public StringProperty arrivalQuantityProperty() {
-        return arrivalQuantity;
-    }
+    
 }
