@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.time.LocalDate;
-                       1
+                       
 public class MainController {
     @FXML
     private TableView<Product> productTable;
