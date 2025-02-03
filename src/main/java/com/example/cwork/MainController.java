@@ -34,6 +34,7 @@ public class MainController {
     @FXML
     private DatePicker arrivalDatePicker;
 
+
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
     @FXML
@@ -157,4 +158,5 @@ public class MainController {
             showAlert("Ошибка", "Товар не выбран", "Пожалуйста, выберите товар для продажи.");
         }
     }
+
 }
