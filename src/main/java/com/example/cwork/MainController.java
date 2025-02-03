@@ -45,7 +45,7 @@ public class MainController {
     private ObservableList<Product> products = FXCollections.observableArrayList();
     private ObservableList<String> saleProducts = FXCollections.observableArrayList();
     private ObservableList<Manufacturer> manufacturers = FXCollections.observableArrayList();
-    private ObservableList<Expense> expenses = FXCollections.observableArrayList();
+
 
     // Инициализация контроллера
     @FXML
@@ -77,6 +77,7 @@ public class MainController {
         products.addListener((ListChangeListener.Change<? extends Product> c) -> {
             updateSaleProductOptions();
         });
+
 
 
         // Ограничиваем ввод только числовыми значениями в поле количества
@@ -177,9 +178,6 @@ public class MainController {
             if (productToSell != null && productToSell.getQuantity() >= quantityToSell) {
                 productToSell.setQuantity(productToSell.getQuantity() - quantityToSell);
 
-                // Фиксация расхода
-                Expense expense = new Expense(productToSell, quantityToSell, LocalDateTime.now(), "Продажа товара");
-                expenses.add(expense);
 
                 clearSaleFields();
             } else {
